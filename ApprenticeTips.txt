@@ -21,3 +21,12 @@ This results in a SQL statement behind the scenes that looks like:
 SELECT * FROM products WHERE category = 'Category1' OR 1=1-- AND available = 1
 
 RESULT: This would show all products no matter what category or availability because logically 1 always equals 1.
+
+
+2. Subverting Application Logic
+
+There may be a SQL statement behind the scenes that logs in the user like so:
+SELECT * FROM users WHERE username = 'smmacander' AND password = 'password123'
+
+Using the logic from (1.), a statement like this can easily be created:
+SELECT * FROM users WHERE username = 'smmacander'--' AND password = 'password123'
