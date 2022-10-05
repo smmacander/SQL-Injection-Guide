@@ -1,3 +1,4 @@
+SECTION A: UNION ATTACKS
 1. Determining the number of columns required in an SQL injection UNION attack
 
 For UNION attacks, it is important to know how many columns are returned from the original query.
@@ -53,3 +54,11 @@ For each test, if it did not return an error but instead returned a table with '
 KEY:
 Test 1 successful means the first column contains string types.
 Test 2 unsuccessful means the second column does not contain string types.
+
+3. Using an SQL injection UNION attack to retrieve interesting data
+
+Now that you know that you have can perform a UNION attack on x amount of columns, let's do the actual attack.  Say you have a query returning 2 columns.  There may be
+another table in the server's database that contains usernames and passwords.  To try and get all the usernames and passwords, a url like this can be constructed:
+https://www.website.com/products?category=Category1'+UNION+SELECT+username,password+FROM+users--
+
+This will return not only the products but the usernames and passwords.
