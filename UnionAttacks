@@ -1,4 +1,3 @@
-SECTION A: UNION ATTACKS
 1. Determining the number of columns required in an SQL injection UNION attack
 
 For UNION attacks, it is important to know how many columns are returned from the original query.
@@ -62,3 +61,12 @@ another table in the server's database that contains usernames and passwords.  T
 https://www.website.com/products?category=Category1'+UNION+SELECT+username,password+FROM+users--
 
 This will return not only the products but the usernames and passwords.
+
+4. Retrieving multiple values within a single column
+
+In a case where a query returns only a single column, you can still return multiple columns on a UNION attack in a single column using string concatenation. On Oracle,
+the concatenation operators are 'string1'||'string2', which outputs 'string1string2'.  This can be done with something like username and password also.  To perform a
+UNION attack on a query that returns 1 column but you want both usernames and passwords, you can construct a URL like this:
+https://www.website.com/products?category=Category1'+UNION+SELECT+username||'!'||password+FROM+users--
+
+This will return usernames and passwords in the same string in the format username!password
